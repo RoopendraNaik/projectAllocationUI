@@ -1,0 +1,73 @@
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit($event)">
+    <mat-form-field appearance="outline" class="widthClass">
+        <mat-chip-list #chipList aria-label="Filter selection">
+            <mat-chip *ngFor="let option of inputFilters" [selectable]="selectable" [removable]="removable"
+                (removed)="remove(option)">
+                {{option}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="New Filter..." #filterInput formControlName="filters" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let filter of filteredOptions | async" [value]="filter">
+                {{filter}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="widthClass">
+        <mat-label>Start Date in Between</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate formControlName="fromDate" placeholder="From">
+            <input matEndDate formControlName="toDate" placeholder="To">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error>This field is required</mat-error>
+    </mat-form-field>
+    <div style="text-align: center;padding-bottom: 20px ;">
+        <button mat-raised-button color="primary" type="submit" [disabled]="inputFilters.length===0">Search</button>
+    </div>
+</form>
+<div *ngIf="actualData.length===0" style="text-align: center;">
+    <h4>No projects present with that filter</h4>
+</div>
+<div class="mat-elevation-z8 table-data">
+    <table *ngIf="actualData.length!==0" mat-table [dataSource]="dataSource" matSort>
+        <ng-container *ngFor="let data of inputDataKeys" [matColumnDef]="data">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: palegoldenrod;">
+                {{ headers[data] }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{row[data]}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>
+<div *ngIf="actualData.length!==0" class="d-flex justify-content-end pt-2" style="text-align: right;">
+    <div class="bg-white">
+        <span class="pageNumber">
+            {{firstMember}}-{{lastMember}} of {{totalDataSize}}
+        </span>
+        <span>
+            <mat-icon [ngClass]="page === 0 ? 'disabled' : 'iconColor pointer'" (click)="changePage(0)">
+                first_page
+            </mat-icon>
+        </span>
+        <span>
+            <mat-icon [ngClass]="page === 0 ? 'disabled' : 'iconColor pointer'" (click)="changePage(-1)">
+                navigate_before
+            </mat-icon>
+        </span>
+        <span>
+            <mat-icon [ngClass]="page === lastPage ? 'disabled' : 'iconColor pointer'" (click)="changePage(1)">
+                navigate_next</mat-icon>
+        </span>
+        <span>
+            <mat-icon [ngClass]="page === lastPage ? 'disabled' : 'iconColor pointer'" (click)="changePage(2)">
+                last_page
+            </mat-icon>
+        </span>
+    </div>
+</div>
