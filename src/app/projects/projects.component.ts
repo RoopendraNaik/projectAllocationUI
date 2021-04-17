@@ -10,6 +10,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { debounceTime, map, startWith } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectApplicationComponent } from './project-application/project-application.component';
 
 @Component({
   selector: 'app-projects',
@@ -41,7 +43,7 @@ export class ProjectsComponent {
   filteredOptions: Observable<string[]>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   actualData = [];
-  constructor(private projectsService: ProjectsService, private fb: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private matdialog: MatDialog, private projectsService: ProjectsService, private fb: FormBuilder, private snackBar: MatSnackBar) {
     this.searchForm = this.fb.group({
       filters: [[]],
       fromDate: [''],
@@ -121,5 +123,19 @@ export class ProjectsComponent {
     this.page = 0;
     this.size = 10;
     this.getData();
+  }
+  Apply(project){
+    console.log("apply clicked");
+    console.log(project);
+    const dialogRef = this.matdialog.open(ProjectApplicationComponent,{
+      data: {projectDetails: project},
+      height: '550px',
+      autoFocus: false
+    })
+    dialogRef.afterClosed().subscribe(val=>{
+      if(val){
+        this.snackBar.open('Application has been sent successfully','dismiss',{duration:3000})
+      }
+    })
   }
 }

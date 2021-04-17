@@ -6,23 +6,27 @@ export interface NavItem {
   children?: NavItem[];
 }
 export const headers = {
+  id: 'Project Id',
   projectName: 'Project Name',
   clientName: 'Client Name',
   startDate: 'Start Date',
   noOfEmployees: 'No of Employees',
   minExperience: 'Min Experience',
   skillsRequired: 'Skills Required',
-  location: 'Location'
+  location: 'Location',
+  action: 'Action'
 }
 
 export const inputDataKeys = [
+  'id',
   'projectName',
   'clientName',
   'startDate',
   'noOfEmployees',
   'minExperience',
   'skillsRequired',
-  'location'
+  'location',
+  'action'
 ]
 
 export const DummyData = [

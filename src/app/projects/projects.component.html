@@ -39,7 +39,14 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: palegoldenrod;">
                 {{ headers[data] }}
             </th>
-            <td mat-cell *matCellDef="let row">{{row[data]}}</td>
+            <td mat-cell *matCellDef="let row">
+                <div *ngIf="headers[data]==='Action'">
+                    <button mat-raised-button color="primary" type="button" (click)="Apply(row)">Apply</button>
+                </div>
+                <div *ngIf="headers[data]!=='Action'">
+                    {{row[data]}}
+                </div>
+            </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
